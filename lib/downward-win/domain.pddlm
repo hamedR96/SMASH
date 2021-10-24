@@ -1,0 +1,249 @@
+(define (domain maisona)
+
+    (:requirements 
+        :strips
+        :typing
+    )
+    
+    (:types 
+        room
+        objectlyable
+        objectwashable 
+        objectsittable
+        door
+        watercloset
+        speaker
+        command
+    )
+
+    (:predicates
+        (at ?r - room)
+        (inl ?ol - objectlyable ?r - room)
+        (inw ?ow - objectwashable ?r - room)
+        (ins ?os - objectsittable ?r - room) 
+        (in ?s - speaker ?r - room)
+        (inwc ?w - watercloset ?r - room)
+        (islying ?ol - objectlyable)
+        (issitted ?os - objectsittable)
+        (adjacent ?r1 ?r2 - room)
+        (doorseparate ?r1 ?r2 - room ?d - door)
+        (isdirty)
+        (iscleaned)
+        (isdress)
+        (isundress)
+        (isstand)
+        (opened ?d - door)
+        (closed ?d - door)
+        (needtoilet)
+        (hasusedtoilet)
+        (hasusedSpeaker)
+        (hasdressed)
+        (haslyed)
+        (hassit)
+        (needcommand)
+    )
+
+    (:action closedoor
+        :parameters 
+            (?d - door ?r1 ?r2 - room)
+        :precondition 
+            (and
+                (isstand)
+                (doorseparate ?r1 ?r2 ?d)
+                (or
+                    (at ?r1)
+                    (at ?r2)
+                )
+                (opened ?d)
+            )
+        :effect 
+            (and 
+                (not(opened ?d))
+                (closed ?d)
+            )
+    )
+    
+
+    (:action opendoor
+        :parameters 
+            (?d - door ?r1 ?r2 - room)
+        :precondition 
+            (and 
+                (isstand)
+                (doorseparate ?r1 ?r2 ?d)
+                (or
+                    (at ?r1)
+                    (at ?r2)
+                )
+                (closed ?d)
+            )
+        :effect 
+            (and
+                (not(closed ?d))
+                (opened ?d)
+            )
+    )
+    
+
+    (:action lyedown
+        :parameters 
+            (?ol - objectlyable ?r - room)
+        :precondition 
+            (and 
+                (isstand)
+                (at ?r)
+                (inl ?ol ?r)
+            )
+        :effect 
+            (and 
+                (not(isstand))
+                (islying ?ol)
+                (haslyed)
+            )
+    )
+
+    (:action lyeup
+        :parameters 
+            (?ol - objectlyable)
+        :precondition 
+            (and 
+                (islying ?ol)
+            )
+        :effect 
+            (and 
+                (isstand)
+                (not(islying ?ol))
+            )
+    )
+
+    (:action undressing
+        :parameters 
+            (?r - room)
+        :precondition 
+            (and 
+                (isdress)
+                (at ?r)
+            )
+        :effect 
+            (and 
+                (not(isdress)) 
+                (isundress)
+            )
+    )
+
+    (:action dressing
+        :parameters 
+            (?r - room)
+        :precondition 
+            (and
+                (isstand)
+                (isundress)
+                (at ?r)
+            )
+        :effect 
+            (and 
+               (not(isundress)) 
+               (isdress)
+               (hasdressed)
+            )
+    )
+
+    (:action move
+        :parameters 
+            (?d - door ?r1 ?r2 - room)
+        :precondition 
+            (and 
+                (adjacent ?r1 ?r2)
+                (doorseparate ?r1 ?r2 ?d)
+                (at ?r1)
+                (isstand)
+                (isdress)
+                (opened ?d)
+            )
+        :effect 
+            (and 
+                (not (at ?r1))
+                (at ?r2)
+            )
+    )
+
+    (:action washing
+        :parameters 
+            (?ow - objectwashable ?r - room)
+        :precondition 
+            (and 
+                (at ?r)
+                (inw ?ow ?r)
+                (isdirty)
+            )
+        :effect 
+            (and
+                (not(isdirty))
+                (iscleaned)
+             )
+    )
+
+    (:action usingtoilet
+        :parameters 
+            (?r - room ?w - watercloset)
+        :precondition 
+            (and
+                (at ?r)
+                (needToilet)
+                (inwc ?w ?r)
+            )
+        :effect 
+            (and
+                (isdirty)
+                (not (iscleaned))
+                (hasusedtoilet)
+                (not (needtoilet)) 
+            )
+    )
+    
+    (:action siton
+        :parameters 
+            (?os - objectsittable ?r - room)
+        :precondition 
+            (and 
+                (isstand)
+                (at ?r)
+                (ins ?os ?r)
+            )
+        :effect 
+            (and 
+                (issitted ?os)
+                (not(isstand))
+            )
+    )
+    
+    (:action standup
+        :parameters 
+            (?os - objectsittable)
+        :precondition 
+            (and 
+                (issitted ?os)
+            )
+        :effect 
+            (and 
+                (isstand)
+                (hassit)
+                (not (issitted ?os))
+            )
+    )
+    
+    (:action speakcommand
+        :parameters 
+            (?s - speaker ?r - room)
+        :precondition 
+            (and 
+                (at ?r)
+                (in ?s ?r)
+                (needCommand)
+            )
+        :effect 
+            (and 
+                (not(needCommand))
+            )
+    )
+)
