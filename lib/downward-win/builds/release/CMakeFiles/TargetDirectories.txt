@@ -1,0 +1,6 @@
+C:/Users/dwvq8414/Desktop/downward-main/builds/release/CMakeFiles/rebuild_cache.dir
+C:/Users/dwvq8414/Desktop/downward-main/builds/release/CMakeFiles/translate.dir
+C:/Users/dwvq8414/Desktop/downward-main/builds/release/CMakeFiles/edit_cache.dir
+C:/Users/dwvq8414/Desktop/downward-main/builds/release/search/CMakeFiles/downward.dir
+C:/Users/dwvq8414/Desktop/downward-main/builds/release/search/CMakeFiles/edit_cache.dir
+C:/Users/dwvq8414/Desktop/downward-main/builds/release/search/CMakeFiles/rebuild_cache.dir
